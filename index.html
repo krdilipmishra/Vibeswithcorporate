@@ -688,9 +688,93 @@ const SONGS_DB = [
   {
     "mood": "Love90s",
     "name": "Itna Na Mujhse Tu Pyar Badha",
-    "artist": "",
+    "artist": "Kumar Sanu",
     "link": "https://open.spotify.com/track/3vLFA2nTU6usnRbYrmVo6f",
     "art": "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e020ec64fd2f466c3799a63c900"
+  },
+  {
+    "mood": "Love90s",
+    "name": "Chura Ke Dil Mera",
+    "artist": "Kumar Sanu",
+    "link": "https://open.spotify.com/track/0V8vPWfmEv8c8A1EWp5IEh",
+    "art": ""
+  },
+  {
+    "mood": "Love90s",
+    "name": "Tum Bin",
+    "artist": "Kumar Sanu",
+    "link": "https://open.spotify.com/track/2wVKYQT6EwKNGLjpKuXX6C",
+    "art": ""
+  },
+  {
+    "mood": "Love90s",
+    "name": "Aankh Mein Teri Ajab Adaa Hai",
+    "artist": "Udit Narayan",
+    "link": "https://open.spotify.com/track/3cXZtj8HzADxRVi1gCGxQH",
+    "art": ""
+  },
+  {
+    "mood": "Love90s",
+    "name": "Dil Kya Kare",
+    "artist": "Udit Narayan",
+    "link": "https://open.spotify.com/track/6NmRt6Uy6nOKvMPZbHHxHo",
+    "art": ""
+  },
+  {
+    "mood": "Motivation",
+    "name": "Chaiyya Chaiyya",
+    "artist": "A.R. Rahman, Sukhwinder Singh",
+    "link": "https://open.spotify.com/track/7qiZfU4dY1lsylvNEprllc",
+    "art": ""
+  },
+  {
+    "mood": "Motivation",
+    "name": "Bande Mein Tha Dum",
+    "artist": "Sonu Nigam",
+    "link": "https://open.spotify.com/track/3D2ZhPvDnBwYakW3TLBjpn",
+    "art": ""
+  },
+  {
+    "mood": "Motivation",
+    "name": "Sadak Pe",
+    "artist": "Rahat Fateh Ali Khan",
+    "link": "https://open.spotify.com/track/1E0xp0R5fZJGcV1bPKvlrJ",
+    "art": ""
+  },
+  {
+    "mood": "Motivation",
+    "name": "Rang Barse",
+    "artist": "Asha Parekh, Usha Uthup",
+    "link": "https://open.spotify.com/track/1OsENGTWJJ8A0pjImlPGJF",
+    "art": ""
+  },
+  {
+    "mood": "Vibe",
+    "name": "Tujhe Yaad Na Meri Aaye",
+    "artist": "Atif Aslam",
+    "link": "https://open.spotify.com/track/5N4gB3Xbf1VLjMOhJCshfW",
+    "art": ""
+  },
+  {
+    "mood": "Vibe",
+    "name": "Ek Hasrat",
+    "artist": "KK",
+    "link": "https://open.spotify.com/track/0qS8Rlmz3xPF7z8m2S6Xou",
+    "art": ""
+  },
+  {
+    "mood": "Vibe",
+    "name": "Yadon Ka Baarish",
+    "artist": "Imaad Shah",
+    "link": "https://open.spotify.com/track/4RfBOG9sKKQJqVqHhxJRgO",
+    "art": ""
+  },
+  {
+    "mood": "Vibe",
+    "name": "Tera Mera Pyar",
+    "artist": "Udit Narayan",
+    "link": "https://open.spotify.com/track/4xZmZfRdZE0hAKhZk1vdxv",
+    "art": ""
   }
 ];
 
@@ -1483,6 +1567,51 @@ function playSpotify(url) {
   }
 }
 
+
+/* ═══════════════ SPOTIFY HANDLER ═══════════════ */
+let nowPlaying = null;
+
+function playSpotifyTrack(url) {
+  if (!url || !url.includes('spotify.com')) return false;
+  
+  try {
+    // Spotify track URL से ID निकालो
+    const trackId = url.match(/track\/([a-zA-Z0-9]+)/)?.[1];
+    if (!trackId) {
+      window.open(url, '_blank');
+      return true;
+    }
+    
+    // Spotify Web Player में खोलो
+    const spotifyUrl = `https://open.spotify.com/track/${trackId}`;
+    window.open(spotifyUrl, '_blank');
+    
+    // UI update करो
+    nowPlaying = url;
+    toast('🎵 Spotify में खुल गया');
+    return true;
+  } catch(e) {
+    window.open(url, '_blank');
+    return true;
+  }
+}
+
+/* Stream button को Spotify से connect करो */
+function streamNow() {
+  const s = cur();
+  if (!s || !s.link) return;
+  
+  if (s.link.includes('spotify.com')) {
+    playSpotifyTrack(s.link);
+  } else if (s.link.includes('youtube') || s.link.includes('youtu.be')) {
+    // YouTube songs के लिए पुराना तरीका
+    try { start(true); } catch(e) {}
+  } else {
+    window.open(s.link, '_blank');
+  }
+}
+
+
 /* ══════════ wiring ══════════ */
 $('play').onclick=toggle; $('next').onclick=()=>next(); $('prev').onclick=prev;
 $('chai').onclick=chaiBreak; $('cardBtn').onclick=openCard;
@@ -1559,4 +1688,5 @@ addEventListener('keydown',e=>{
 </script>
 </body>
 </html>
+
 
